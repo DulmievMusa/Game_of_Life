@@ -8,6 +8,18 @@ def fill_random(matrix):
             row[x] = random.randint(0, 1)
     return matrix
 
+def draw_cell_border(surface, color, rect, width=1):
+    x, y, w, h = rect
+
+    pygame.draw.line(
+        surface, color,
+        (x, y), (x + w - 1, y), width
+    )
+    pygame.draw.line(
+        surface, color,
+        (x, y), (x, y + h - 1), width
+    )
+
 
 def draw_cellular_field(matrix, background, size):
     rows = len(matrix)
@@ -16,8 +28,11 @@ def draw_cellular_field(matrix, background, size):
         for x in range(columns):
             if matrix[y][x] == 1:
                 pygame.draw.rect(background, (250, 250, 250), (x * size, y * size, size, size), 0)
+                # pygame.draw.rect(background, (0, 0, 0), (x * size, y * size, size, size), 1)     
+                draw_cell_border(background, (0, 0, 0), (x * size, y * size, size, size))
             else:
-                pygame.draw.rect(background, (250, 250, 250), (x * size, y * size, size, size), 1)
+                # pygame.draw.rect(background, (250, 250, 250), (x * size, y * size, size, size), 1)
+                draw_cell_border(background, (250, 250, 250), (x * size, y * size, size, size))
     return background
 
 def take_step(matrix):
