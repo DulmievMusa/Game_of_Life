@@ -2,6 +2,32 @@ import random
 import pygame
 from pygame.locals import *
 
+
+def draw_button_icon(surface, action, rect):
+    color = (255, 255, 255)
+    cx, cy = rect.center
+
+    if action == "start":
+        pygame.draw.polygon(surface, color, [
+            (cx - 7, cy - 11),
+            (cx - 7, cy + 11),
+            (cx + 11, cy),
+        ])
+
+    elif action == "pause":
+        pygame.draw.rect(surface, color, (cx - 9, cy - 10, 6, 20))
+        pygame.draw.rect(surface, color, (cx + 3, cy - 10, 6, 20))
+
+    elif action == "random":
+        pygame.draw.rect(
+            surface, color,
+            (cx - 12, cy - 12, 24, 24),
+            width=2, border_radius=4
+        )
+
+        for dx, dy in [(-6, -6), (6, -6), (0, 0), (-6, 6), (6, 6)]:
+            pygame.draw.circle(surface, color, (cx + dx, cy + dy), 2)
+
 def fill_random(matrix):
     for row in matrix:
         for x in range(len(row)):

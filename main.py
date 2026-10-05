@@ -11,16 +11,23 @@ iteration_time = 100
 birth = [3]
 survival = [2, 3]
 
+panel_height = 60
+
+
+buttons = [
+    ("start", pygame.Rect(10, height + 10, 50, 40)),
+    ("pause", pygame.Rect(70, height + 10, 50, 40)),
+    ("random", pygame.Rect(130, height + 10, 50, 40)),
+]
 
 
 
 def main():
-
     pygame.init()
     matrix = [[0 for i in range(int(width / size))] for j in range(int(height / size))]
     # matrix = fill_random(matrix)
     # fill_random(matrix)
-    screen = pygame.display.set_mode((width, height))
+    screen = pygame.display.set_mode((width, height + panel_height))
     pygame.display.set_caption('Basic Pygame program')
     
 
@@ -46,6 +53,19 @@ def main():
                 if event.key == pygame.K_SPACE:
                     paused = not paused
 
+            elif event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    for action, rect in buttons:
+                        if rect.collidepoint(event.pos):
+                            if action == "start":
+                                paused = False
+                            elif action == "pause":
+                                paused = True
+                            elif action == "random":
+                                fill_random(matrix)
+                                paused = True
+                            break
+
             elif event.type == STEP_EVENT:
                 if not paused:
                     matrix = take_step(matrix, birth=birth, survival=survival)
@@ -66,6 +86,17 @@ def main():
         background.fill((0, 0, 0))
         draw_cellular_field(matrix, background, size)
         screen.blit(background, (0, 0))
+        pygame.draw.rect(
+        screen, (35, 35, 35),
+        (0, height, width, panel_height)
+        )
+
+        mouse_pos = pygame.mouse.get_pos()
+
+        for action, rect in buttons:
+            color = (90, 90, 90) if rect.collidepoint(mouse_pos) else (60, 60, 60)
+            pygame.draw.rect(screen, color, rect, border_radius=6)
+            draw_button_icon(screen, action, rect)
         pygame.display.flip()
 
         clock.tick(120)
