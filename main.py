@@ -18,12 +18,15 @@ buttons = [
     ("start", pygame.Rect(10, height + 10, 50, 40)),
     ("pause", pygame.Rect(70, height + 10, 50, 40)),
     ("random", pygame.Rect(130, height + 10, 50, 40)),
+    ("slower", pygame.Rect(190, height + 10, 50, 40)),
+    ("faster", pygame.Rect(250, height + 10, 50, 40))
 ]
 
 
 
 def main():
     pygame.init()
+    font = pygame.font.SysFont("Arial", 22)
     matrix = [[0 for i in range(int(width / size))] for j in range(int(height / size))]
     # matrix = fill_random(matrix)
     # fill_random(matrix)
@@ -38,9 +41,9 @@ def main():
     screen.blit(background, (0, 0))
     pygame.display.flip()
 
-
+    step_interval = iteration_time
     STEP_EVENT = pygame.USEREVENT + 1
-    pygame.time.set_timer(STEP_EVENT, iteration_time)
+    pygame.time.set_timer(STEP_EVENT, step_interval)
     clock = pygame.time.Clock()
     paused = True
     while True:
@@ -64,6 +67,13 @@ def main():
                             elif action == "random":
                                 fill_random(matrix)
                                 paused = True
+                            elif action == "slower":
+                                step_interval = min(5000, int(step_interval * 1.3))
+                                pygame.time.set_timer(STEP_EVENT, step_interval)
+
+                            elif action == "faster":
+                                step_interval = max(10, step_interval // 2)
+                                pygame.time.set_timer(STEP_EVENT, step_interval)
                             break
 
             elif event.type == STEP_EVENT:
@@ -97,6 +107,15 @@ def main():
             color = (90, 90, 90) if rect.collidepoint(mouse_pos) else (60, 60, 60)
             pygame.draw.rect(screen, color, rect, border_radius=6)
             draw_button_icon(screen, action, rect)
+        speed_percent = 10 / step_interval * 100
+
+        speed_text = font.render(
+            f"Скорость: {speed_percent:.1f}%",
+            True,
+            (255, 255, 255)
+        )
+
+        screen.blit(speed_text, (320, height + 20))
         pygame.display.flip()
 
         clock.tick(120)

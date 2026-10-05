@@ -27,6 +27,19 @@ def draw_button_icon(surface, action, rect):
 
         for dx, dy in [(-6, -6), (6, -6), (0, 0), (-6, 6), (6, 6)]:
             pygame.draw.circle(surface, color, (cx + dx, cy + dy), 2)
+    elif action in ("slower", "faster"):
+        # Горизонтальная черта для обоих значков.
+        pygame.draw.line(
+            surface, color,
+            (cx - 10, cy), (cx + 10, cy), 3
+        )
+
+        # Вертикальная черта превращает минус в плюс.
+        if action == "faster":
+            pygame.draw.line(
+                surface, color,
+                (cx, cy - 10), (cx, cy + 10), 3
+            )
 
 def fill_random(matrix):
     for row in matrix:
