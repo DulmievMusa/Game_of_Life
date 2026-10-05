@@ -8,6 +8,10 @@ height = 700
 size = 20
 iteration_time = 100
 
+# RULES
+birth = [3]
+survival = [2, 3]
+
 
 
 
@@ -32,14 +36,20 @@ def main():
     STEP_EVENT = pygame.USEREVENT + 1
     pygame.time.set_timer(STEP_EVENT, iteration_time)
     clock = pygame.time.Clock()
+    paused = False
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
                 pygame.quit()
                 return
-            elif event.type == STEP_EVENT:
-                matrix = take_step(matrix)
 
+            elif event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_SPACE:
+                    paused = not paused
+
+            elif event.type == STEP_EVENT:
+                if not paused:
+                    matrix = take_step(matrix, birth=birth, survival=survival)
 
         background.fill((0, 0, 0))
         draw_cellular_field(matrix, background, size)
@@ -47,8 +57,6 @@ def main():
         pygame.display.flip()
 
         clock.tick(120)
-
-        pygame.display.flip()
 
     
     

@@ -35,7 +35,7 @@ def draw_cellular_field(matrix, background, size):
                 draw_cell_border(background, (250, 250, 250), (x * size, y * size, size, size))
     return background
 
-def take_step(matrix):
+def take_step(matrix, birth=[3], survival=[2]):
     rows = len(matrix)
     columns = len(matrix[0])
     next_matrix = [[0 for _ in range(columns)] for _ in range(rows)]
@@ -52,7 +52,7 @@ def take_step(matrix):
                     if 0 <= check_y < rows and 0 <= check_x < columns:
                         neighbors += matrix[check_y][check_x]
 
-            if neighbors == 3 or (matrix[y][x] == 1 and neighbors == 2):
+            if neighbors in birth or (matrix[y][x] == 1 and neighbors in survival):
                 next_matrix[y][x] = 1
 
     return next_matrix  
