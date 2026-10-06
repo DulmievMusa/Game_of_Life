@@ -40,7 +40,16 @@ def draw_button_icon(surface, action, rect):
                 surface, color,
                 (cx, cy - 10), (cx, cy + 10), 3
             )
-
+    elif action == "clear":
+        pygame.draw.line(
+            surface, color,
+            (cx - 9, cy - 9), (cx + 9, cy + 9), 3
+        )
+        pygame.draw.line(
+            surface, color,
+            (cx - 9, cy + 9), (cx + 9, cy - 9), 3
+        )
+    
 def fill_random(matrix):
     for row in matrix:
         for x in range(len(row)):

@@ -19,7 +19,8 @@ buttons = [
     ("pause", pygame.Rect(70, height + 10, 50, 40)),
     ("random", pygame.Rect(130, height + 10, 50, 40)),
     ("slower", pygame.Rect(190, height + 10, 50, 40)),
-    ("faster", pygame.Rect(250, height + 10, 50, 40))
+    ("faster", pygame.Rect(250, height + 10, 50, 40)),
+    ("clear", pygame.Rect(730, height + 10, 50, 40))
 ]
 
 
@@ -67,6 +68,11 @@ def main():
                             elif action == "random":
                                 fill_random(matrix)
                                 paused = True
+                            elif action == "clear":
+                                paused = True
+                                for row in matrix:
+                                    for x in range(len(row)):
+                                        row[x] = 0
                             elif action == "slower":
                                 step_interval = min(5000, int(step_interval * 1.3))
                                 pygame.time.set_timer(STEP_EVENT, step_interval)
