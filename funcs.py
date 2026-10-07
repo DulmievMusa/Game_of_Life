@@ -83,7 +83,7 @@ def draw_cellular_field(matrix, background, size):
                 draw_cell_border(background, (250, 250, 250), (x * size, y * size, size, size))
     return background
 
-def take_step(matrix, birth=[3], survival=[2]):
+def take_step(matrix, birth=[3], survival=[2], toroidal=False):
     rows = len(matrix)
     columns = len(matrix[0])
     next_matrix = [[0 for _ in range(columns)] for _ in range(rows)]
@@ -97,6 +97,11 @@ def take_step(matrix, birth=[3], survival=[2]):
                         continue
                     check_y = y + dy
                     check_x = x + dx
+
+                    if toroidal:
+                        check_y %= rows
+                        check_x %= columns
+
                     if 0 <= check_y < rows and 0 <= check_x < columns:
                         neighbors += matrix[check_y][check_x]
 

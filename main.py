@@ -20,7 +20,8 @@ buttons = [
     ("random", pygame.Rect(130, height + 10, 50, 40)),
     ("slower", pygame.Rect(190, height + 10, 50, 40)),
     ("faster", pygame.Rect(250, height + 10, 50, 40)),
-    ("clear", pygame.Rect(730, height + 10, 50, 40))
+    ("clear", pygame.Rect(730, height + 10, 50, 40)),
+    ("torus", pygame.Rect(530, height + 10, 180, 40)),
 ]
 
 
@@ -47,6 +48,7 @@ def main():
     pygame.time.set_timer(STEP_EVENT, step_interval)
     clock = pygame.time.Clock()
     paused = True
+    toroidal = False
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -78,13 +80,15 @@ def main():
                                 pygame.time.set_timer(STEP_EVENT, step_interval)
 
                             elif action == "faster":
-                                step_interval = max(10, step_interval // 2)
+                                step_interval = max(10, int(step_interval / 1.3))
                                 pygame.time.set_timer(STEP_EVENT, step_interval)
+                            elif action == "torus":
+                                toroidal = not toroidal
                             break
 
             elif event.type == STEP_EVENT:
                 if not paused:
-                    matrix = take_step(matrix, birth=birth, survival=survival)
+                    matrix = take_step(matrix, birth=birth, survival=survival, toroidal=toroidal)
 
         if paused:
             left, _, right = pygame.mouse.get_pressed()
@@ -113,6 +117,11 @@ def main():
             color = (90, 90, 90) if rect.collidepoint(mouse_pos) else (60, 60, 60)
             pygame.draw.rect(screen, color, rect, border_radius=6)
             draw_button_icon(screen, action, rect)
+
+            if action == "torus":
+                label = "Тор: вкл" if toroidal else "Тор: выкл"
+                text = font.render(label, True, (255, 255, 255))
+                screen.blit(text, text.get_rect(center=rect.center))
         speed_percent = 10 / step_interval * 100
 
         speed_text = font.render(
