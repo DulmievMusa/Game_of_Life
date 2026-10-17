@@ -135,8 +135,6 @@ def main():
 
         clock.tick(120)
 
-    
-    
 
 
 if __name__ == '__main__':
