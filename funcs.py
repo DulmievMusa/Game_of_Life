@@ -18,6 +18,14 @@ def draw_button_icon(surface, action, rect):
         pygame.draw.rect(surface, color, (cx - 9, cy - 10, 6, 20))
         pygame.draw.rect(surface, color, (cx + 3, cy - 10, 6, 20))
 
+    elif action == "step":
+        pygame.draw.polygon(surface, color, [
+            (cx - 11, cy - 10),
+            (cx - 11, cy + 10),
+            (cx + 3, cy),
+        ])
+        pygame.draw.rect(surface, color, (cx + 7, cy - 10, 4, 20))
+
     elif action == "random":
         pygame.draw.rect(
             surface, color,

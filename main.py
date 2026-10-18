@@ -17,18 +17,19 @@ panel_height = 60
 buttons = [
     ("start", pygame.Rect(10, height + 10, 50, 40)),
     ("pause", pygame.Rect(70, height + 10, 50, 40)),
-    ("random", pygame.Rect(130, height + 10, 50, 40)),
-    ("slower", pygame.Rect(190, height + 10, 50, 40)),
-    ("faster", pygame.Rect(250, height + 10, 50, 40)),
+    ("step", pygame.Rect(130, height + 10, 50, 40)),
+    ("random", pygame.Rect(190, height + 10, 50, 40)),
+    ("slower", pygame.Rect(250, height + 10, 50, 40)),
+    ("faster", pygame.Rect(310, height + 10, 50, 40)),
     ("clear", pygame.Rect(730, height + 10, 50, 40)),
-    ("torus", pygame.Rect(530, height + 10, 180, 40)),
+    ("torus", pygame.Rect(600, height + 10, 120, 40)),
 ]
 
 
 
 def main():
     pygame.init()
-    font = pygame.font.SysFont("Arial", 22)
+    font = pygame.font.SysFont("Arial", 18)
     matrix = [[0 for i in range(int(width / size))] for j in range(int(height / size))]
     # matrix = fill_random(matrix)
     # fill_random(matrix)
@@ -67,6 +68,8 @@ def main():
                                 paused = False
                             elif action == "pause":
                                 paused = True
+                            elif action == "step" and paused:
+                                matrix = take_step(matrix, birth=birth, survival=survival, toroidal=toroidal)
                             elif action == "random":
                                 fill_random(matrix)
                                 paused = True
@@ -115,6 +118,8 @@ def main():
 
         for action, rect in buttons:
             color = (90, 90, 90) if rect.collidepoint(mouse_pos) else (60, 60, 60)
+            if action == "step" and not paused:
+                color = (40, 40, 40)
             pygame.draw.rect(screen, color, rect, border_radius=6)
             draw_button_icon(screen, action, rect)
 
@@ -130,7 +135,17 @@ def main():
             (255, 255, 255)
         )
 
-        screen.blit(speed_text, (320, height + 20))
+        live_cells = sum(sum(row) for row in matrix)
+        total_cells = sum(len(row) for row in matrix)
+        density = live_cells / total_cells if total_cells else 0
+        density_text = font.render(
+            f"Плотность: {density:.2%}",
+            True,
+            (255, 255, 255)
+        )
+
+        screen.blit(speed_text, (375, height + 7))
+        screen.blit(density_text, (375, height + 31))
         pygame.display.flip()
 
         clock.tick(120)
