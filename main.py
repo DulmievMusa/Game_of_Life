@@ -4,7 +4,7 @@ from pygame.locals import *
 
 width = 800
 height = 700
-size = 10
+size = 5
 iteration_time = 100
 
 # RULES
