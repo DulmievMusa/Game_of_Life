@@ -35,7 +35,7 @@ def draw_button_icon(surface, action, rect):
 
         for dx, dy in [(-6, -6), (6, -6), (0, 0), (-6, 6), (6, 6)]:
             pygame.draw.circle(surface, color, (cx + dx, cy + dy), 2)
-    elif action in ("slower", "faster"):
+    elif action in ("slower", "faster", "density_down", "density_up"):
         # Горизонтальная черта для обоих значков.
         pygame.draw.line(
             surface, color,
@@ -43,7 +43,7 @@ def draw_button_icon(surface, action, rect):
         )
 
         # Вертикальная черта превращает минус в плюс.
-        if action == "faster":
+        if action in ("faster", "density_up"):
             pygame.draw.line(
                 surface, color,
                 (cx, cy - 10), (cx, cy + 10), 3
@@ -58,10 +58,10 @@ def draw_button_icon(surface, action, rect):
             (cx - 9, cy + 9), (cx + 9, cy - 9), 3
         )
     
-def fill_random(matrix):
+def fill_random(matrix, density=0.5):
     for row in matrix:
         for x in range(len(row)):
-            row[x] = random.randint(0, 1)
+            row[x] = int(random.random() < density)
     return matrix
 
 def draw_cell_border(surface, color, rect, width=1):
@@ -116,10 +116,4 @@ def take_step(matrix, birth=[3], survival=[2], toroidal=False):
             if neighbors in birth or (matrix[y][x] == 1 and neighbors in survival):
                 next_matrix[y][x] = 1
 
-    return next_matrix  
-
-def fill_random(matrix):
-    for row in matrix:
-        for x in range(len(row)):
-            row[x] = random.randint(0, 1)
-    return matrix
+    return next_matrix

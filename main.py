@@ -11,7 +11,7 @@ iteration_time = 100
 birth = [3]
 survival = [2, 3]
 
-panel_height = 60
+panel_height = 100
 
 
 buttons = [
@@ -23,6 +23,8 @@ buttons = [
     ("faster", pygame.Rect(310, height + 10, 50, 40)),
     ("clear", pygame.Rect(730, height + 10, 50, 40)),
     ("torus", pygame.Rect(600, height + 10, 120, 40)),
+    ("density_down", pygame.Rect(190, height + 60, 40, 30)),
+    ("density_up", pygame.Rect(410, height + 60, 40, 30)),
 ]
 
 
@@ -50,6 +52,7 @@ def main():
     clock = pygame.time.Clock()
     paused = True
     toroidal = False
+    random_density_percent = 50
     while True:
         for event in pygame.event.get():
             if event.type == QUIT:
@@ -71,8 +74,12 @@ def main():
                             elif action == "step" and paused:
                                 matrix = take_step(matrix, birth=birth, survival=survival, toroidal=toroidal)
                             elif action == "random":
-                                fill_random(matrix)
+                                fill_random(matrix, density=random_density_percent / 100)
                                 paused = True
+                            elif action == "density_down":
+                                random_density_percent = max(0, random_density_percent - 2.5)
+                            elif action == "density_up":
+                                random_density_percent = min(100, random_density_percent + 2.5)
                             elif action == "clear":
                                 paused = True
                                 for row in matrix:
@@ -146,6 +153,15 @@ def main():
 
         screen.blit(speed_text, (375, height + 7))
         screen.blit(density_text, (375, height + 31))
+        random_density_text = font.render(
+            f"Заполнение: {random_density_percent:g}%",
+            True,
+            (255, 255, 255)
+        )
+        screen.blit(
+            random_density_text,
+            random_density_text.get_rect(center=(320, height + 75))
+        )
         pygame.display.flip()
 
         clock.tick(120)
